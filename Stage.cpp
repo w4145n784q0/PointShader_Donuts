@@ -8,12 +8,32 @@
 
 
 
+void Stage::InitConstantBuffer()
+{
+    D3D11_BUFFER_DESC cb;
+    cb.ByteWidth = sizeof(CONSTBUFFER_STAGE);
+    cb.Usage = D3D11_USAGE_DYNAMIC;
+    cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    cb.MiscFlags = 0;
+    cb.StructureByteStride = 0;
+
+    HRESULT hr;
+    hr = Direct3D::pDevice_->CreateBuffer(&cb, nullptr, &pConstantBuffer_);
+    if (FAILED(hr))
+    {
+        MessageBox(NULL, "コンスタントバッファの作成に失敗しました", "エラー", MB_OK);
+    }
+}
+
 //コンストラクタ
 Stage::Stage(GameObject* parent)
-    :GameObject(parent, "Stage")
+    :GameObject(parent, "Stage"),pConstantBuffer_(nullptr)
 {
     hModel_ = -1;
+    hRoom_ = -1;
     hGround = -1;
+    hBunny_ = -1;
     hDonuts_ = -1;
 }
 
@@ -32,6 +52,8 @@ void Stage::Initialize()
     hDonuts_ = Model::Load("Assets\\Donuts.fbx");
     Camera::SetPosition(XMFLOAT3{ 0, 0.8, -2.8 });
     Camera::SetTarget(XMFLOAT3{ 0,0.8,0 });
+
+    InitConstantBuffer();
 }
 
 //更新
@@ -74,6 +96,8 @@ void Stage::Update()
         p = { p.x ,p.y - 0.01f, p.z,p.w };
         Direct3D::SetLightPos(p);
     }
+
+    //コンスタントバッファの設定とシェーダへのコンスタントバッファのセットを書く
 }
 
 //描画

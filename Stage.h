@@ -2,6 +2,12 @@
 #include "Engine/GameObject.h"
 
 
+struct CONSTBUFFER_STAGE
+{
+    XMFLOAT4 lightPosition;//光源位置
+    XMFLOAT4 eyePosition;//視点の位置
+};
+
 //◆◆◆を管理するクラス
 class Stage : public GameObject
 {
@@ -10,6 +16,9 @@ class Stage : public GameObject
     int hGround;
     int hBunny_;
     int hDonuts_;
+
+    ID3D11Buffer* pConstantBuffer_;
+    void InitConstantBuffer();
 public:
     //コンストラクタ
     Stage(GameObject* parent);
