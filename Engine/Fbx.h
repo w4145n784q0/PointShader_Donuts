@@ -21,8 +21,11 @@ class Fbx
 	struct MATERIAL
 	{
 		Texture* pTexture;
-		XMFLOAT4 diffuse;
-		XMFLOAT4 factor;
+		XMFLOAT4 diffuse;//拡散反射係数 ベクトル
+		XMFLOAT4 specular;//鏡面反射係数　ベクトル
+		XMFLOAT4 shainness;//鏡面反射のパラメータ　スカラー
+		XMFLOAT4 ambient; //環境光の反射係数（環境光の色）ベクトル
+		XMFLOAT4 factor;//スカラー
 	};
 
 	struct CONSTBUFFER_MODEL

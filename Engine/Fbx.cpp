@@ -12,6 +12,8 @@ Fbx::Fbx()
 {
 }
 
+//舞フレームシェーダに送っている
+//コンスタントバッファ→シェーダは一方通行
 HRESULT Fbx::Load(std::string fileName)
 {
 	//マネージャを生成
@@ -229,11 +231,21 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 				HRESULT hr = pMaterialList_[i].pTexture->Load(texFile.string());
 				assert(hr == S_OK);
 			}
-			FbxSurfaceLambert* pMaterial = (FbxSurfaceLambert*)pNode->GetMaterial(i);
+			FbxSurfacePhong* pMaterial = (FbxSurfacePhong*)pNode->GetMaterial(i);
 			FbxDouble  diffuse = pMaterial->DiffuseFactor;
+			FbxDouble3 ambient = pMaterial->Ambient;
+
 			//diffuse = 1.0;
 			pMaterialList_[i].factor = XMFLOAT4((float)diffuse, (float)diffuse, (float)diffuse, (float)diffuse);
+			pMaterialList_[i].ambient = { ambient[0], ambient[1], ambient[2],1.0f };
+
+			if (pMaterial->GetClassId().Is(FbxSurfacePhong::ClassId))//フォンのぱらめーたを持っているか
+			{
+				FbxDouble3 specular = pMaterial->Specular;
+				FbxDouble shininess = pMaterial->Shininess;
+			}
 			
+
 		}
 
 		//テクスチャ無し
@@ -247,11 +259,14 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 			//FbxSurfaceLambert* pMaterial = (FbxSurfaceLambert*)pNode->GetMaterial(i);
 			FbxDouble  factor = pMaterial->DiffuseFactor;
 			pMaterialList_[i].factor = XMFLOAT4((float)factor, (float)factor, (float)factor, (float)factor);
+			FbxDouble3 ambient = pMaterial->Ambient;
+			pMaterialList_[i].ambient = { ambient[0], ambient[1], ambient[2],1.0f };
 		}
 	}
 }
 
-
+//舞フレームシェーダに送っている
+//コンスタントバッファ→シェーダは一方通行
 void Fbx::Draw(Transform& transform)
 {
 	Direct3D::SetShader(SHADER_POINT);
