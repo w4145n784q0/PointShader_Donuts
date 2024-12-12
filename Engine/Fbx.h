@@ -23,7 +23,7 @@ class Fbx
 		Texture* pTexture;
 		XMFLOAT4 diffuse;//拡散反射係数 ベクトル
 		XMFLOAT4 specular;//鏡面反射係数　ベクトル
-		XMFLOAT4 shainness;//鏡面反射のパラメータ　スカラー
+		XMFLOAT4 shininess;//鏡面反射のパラメータ　スカラー
 		XMFLOAT4 ambient; //環境光の反射係数（環境光の色）ベクトル
 		XMFLOAT4 factor;//スカラー
 	};
@@ -34,8 +34,10 @@ class Fbx
 		XMMATRIX	matW; //ワールド変換マトリクス
 		XMMATRIX	matNormal;//法線ワールド変換用マトリクス
 		XMFLOAT4	diffuseColor;//RGBの拡散反射係数（色）
-		//XMFLOAT4    lightPosition;//光源位置
 		XMFLOAT4	diffuseFactor;//拡散光の反射係数
+		XMFLOAT4    ambientColor;//環境光の色
+		XMFLOAT4    specularColor;//
+		XMFLOAT4    shininess;
 		int			isTextured;
 	};
 
