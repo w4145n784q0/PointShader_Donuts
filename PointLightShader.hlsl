@@ -83,7 +83,7 @@ float4 PS(VS_OUT inData) : SV_Target
     float dTerm = 1.0 / (k.x + k.y*len + k.z*len*len);
     
     float4 R = reflect(normalize(inData.normal), normalize(float4(-dir, 0.0))); //ê≥îΩéÀÉxÉNÉgÉã
-    float4 specular = pow(dot(R, normalize(-inData.eyev)), shininess) * specularColor;
+    float4 specular = pow(saturate(dot(R, normalize(inData.eyev))), shininess) * specularColor;
     
     if (isTextured == false)
     {

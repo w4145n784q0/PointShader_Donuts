@@ -22,7 +22,7 @@ class Fbx
 	{
 		Texture* pTexture;
 		XMFLOAT4 diffuse;//拡散反射係数 ベクトル
-		XMFLOAT4 specular;//鏡面反射係数　ベクトル
+		XMFLOAT4 specular;//鏡面反射係数　ベクトル(色)
 		XMFLOAT4 shininess;//鏡面反射のパラメータ　スカラー
 		XMFLOAT4 ambient; //環境光の反射係数（環境光の色）ベクトル
 		XMFLOAT4 factor;//スカラー
@@ -62,10 +62,21 @@ class Fbx
 	void InitIndex(fbxsdk::FbxMesh* mesh);
 	void IntConstantBuffer();
 	void InitMaterial(fbxsdk::FbxNode* pNode);
+
+	enum ShaderState {
+		S_POINT,
+		S_3D,
+		MAX
+	};
+	ShaderState S_state;
+	
 public:
 
 	Fbx();
 	HRESULT Load(std::string fileName);
 	void    Draw(Transform& transform);
 	void    Release();
+
+	void ChangePoint() { S_state = S_POINT; }
+	void Change3D() { S_state = S_3D; }
 };

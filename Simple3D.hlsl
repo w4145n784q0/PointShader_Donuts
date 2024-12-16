@@ -13,7 +13,7 @@ cbuffer global
 	float4x4	matWVP;			// ワールド・ビュー・プロジェクションの合成行列
 	float4x4	matNormal;           // ワールド行列
 	float4		diffuseColor;		//マテリアルの色＝拡散反射係数tt
-    float4		lightPosition;
+    float4		lightPosition;		//光源ベクトル
     float2		factor;
 	bool		isTextured;			//テクスチャーが貼られているかどうか
 };
@@ -76,3 +76,4 @@ float4 PS(VS_OUT inData) : SV_Target
 	//float4 ambient = lightSource * ambentSource;
 	return diffuse + ambient;
 }
+//スペキュラーの部分も計算に入れる

@@ -28,7 +28,7 @@ void Stage::InitConstantBuffer()
 
 //コンストラクタ
 Stage::Stage(GameObject* parent)
-    :GameObject(parent, "Stage"),pConstantBuffer_(nullptr)
+    :GameObject(parent, "Stage"),pConstantBuffer_(nullptr),pFbx_(nullptr)
 {
     hModel_ = -1;
     hRoom_ = -1;
@@ -95,6 +95,11 @@ void Stage::Update()
         XMFLOAT4 p = Direct3D::GetLightPos();
         p = { p.x ,p.y - 0.01f, p.z,p.w };
         Direct3D::SetLightPos(p);
+    }
+
+    if (Input::IsKey(DIK_DOWN))
+    {
+        
     }
 
     //コンスタントバッファの設定とシェーダへのコンスタントバッファのセットを書く

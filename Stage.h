@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine/GameObject.h"
+#include "Engine/Fbx.h"
 
 
 struct CONSTBUFFER_STAGE
@@ -19,6 +20,7 @@ class Stage : public GameObject
 
     ID3D11Buffer* pConstantBuffer_;
     void InitConstantBuffer();
+    Fbx* pFbx_;
 public:
     //コンストラクタ
     Stage(GameObject* parent);

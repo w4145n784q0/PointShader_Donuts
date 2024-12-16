@@ -8,7 +8,8 @@
 
 Fbx::Fbx()
 	:vertexCount_(0), polygonCount_(0), materialCount_(0),
-	pVertexBuffer_(nullptr), pIndexBuffer_(nullptr), pConstantBuffer_(nullptr)
+	pVertexBuffer_(nullptr), pIndexBuffer_(nullptr), pConstantBuffer_(nullptr),
+	S_state(S_POINT)
 {
 }
 
@@ -278,6 +279,11 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 				pMaterialList_[i].specular = { (float)specular[0],(float)specular[1], (float)specular[2],1.0f };
 				pMaterialList_[i].shininess = { (float)shininess,(float)shininess, (float)shininess, 1.0f };
 			}
+			else
+			{
+				pMaterialList_[i].specular = { 0.0f,0.0f,0.0f,1.0f };
+				pMaterialList_[i].shininess = { 10.0f,10.0f,10.0f, 1.0 };
+			}
 		}
 	}
 }
@@ -286,7 +292,16 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 //コンスタントバッファ→シェーダは一方通行
 void Fbx::Draw(Transform& transform)
 {
-	Direct3D::SetShader(SHADER_POINT);
+	//stateで点光源と平行光源を切り替えする
+	if (S_state == S_POINT)
+	{
+		Direct3D::SetShader(SHADER_POINT);
+	}
+	else if(S_state == S_3D)
+	{
+		Direct3D::SetShader(SHADER_3D);
+	}
+	
 	transform.Calclation();//トランスフォームを計算
 	
 
