@@ -297,15 +297,15 @@ void Fbx::Draw(Transform& transform)
 	ChangeLight();
 
 	//stateで点光源と平行光源を切り替えする
-	if (S_state == S_POINT)
+	/*if (S_state == S_POINT)
 	{
 		Direct3D::SetShader(SHADER_POINT);
 	}
 	else if(S_state == S_3D)
 	{
 		Direct3D::SetShader(SHADER_3D);
-	}
-	//Direct3D::SetShader(SHADER_POINT);
+	}*/
+	Direct3D::SetShader(SHADER_TOON);
 	transform.Calclation();//トランスフォームを計算
 	
 
