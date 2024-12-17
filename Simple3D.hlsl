@@ -37,8 +37,8 @@ struct VS_OUT
 	float4 pos  : SV_POSITION;	//位置(ローカル)
 	float2 uv	: TEXCOORD;		//UV座標
 	float4 color	: COLOR;	//色（明るさ）
-   // float4 normal : NORMAL;
-   // float4 eyev : POSITION1;
+    float4 normal : NORMAL;     //法線の情報
+    float4 eyev : POSITION1;
 };
 
 //───────────────────────────────────────
@@ -57,7 +57,9 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
     outData.uv = uv;
 
 	//法線ベクトルにワールド行列をかける
+	//頂点間の色は補完してくれる
 	normal = mul(normal , matNormal);
+    outData.normal = normal;
 	
 	//光源ベクトルを正規化
     float4 light = lightPosition;
@@ -77,7 +79,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 float4 PS(VS_OUT inData) : SV_Target
 {
 	float4 lightSource = float4(1.0, 1.0, 1.0, 1.0);
-    float4 ambentSource = float4(0.2, 0.2, 0.2, 1.0);
+    float4 ambentSource = float4(0.5, 0.5, 0.5, 1.0);
 	float4 diffuse;
 	float4 ambient;
 	
