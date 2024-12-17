@@ -35,6 +35,10 @@ Stage::Stage(GameObject* parent)
     hGround = -1;
     hBunny_ = -1;
     hDonuts_ = -1;
+    hDonuts_lambert_notex = -1;
+    hDonuts_lambert_tex = -1;
+    hDonuts_phong_notex = -1;
+    hDonuts_phong_tex = -1;
 }
 
 //デストラクタ
@@ -49,7 +53,14 @@ void Stage::Initialize()
     hRoom_ = Model::Load("Assets\\room.fbx");
     hGround = Model::Load("Assets\\plane3.fbx");
     hBunny_ = Model::Load("Assets\\stanford-bunny.fbx");
-    hDonuts_ = Model::Load("Assets\\Donuts.fbx");
+
+    hDonuts_ = Model::Load("Assets\\Donuts_phong_tex.fbx");
+   
+    hDonuts_lambert_notex = Model::Load("Assets\\Donuts_lambert_notex.fbx");
+    hDonuts_lambert_tex = Model::Load("Assets\\Donuts_lambert_tex.fbx");
+    hDonuts_phong_notex = Model::Load("Assets\\Donuts_phong_notex.fbx");
+    hDonuts_phong_tex = Model::Load("Assets\\Donuts_phong_tex.fbx");
+
     Camera::SetPosition(XMFLOAT3{ 0, 0.8, -2.8 });
     Camera::SetTarget(XMFLOAT3{ 0,0.8,0 });
 
@@ -97,10 +108,7 @@ void Stage::Update()
         Direct3D::SetLightPos(p);
     }
 
-    if (Input::IsKey(DIK_DOWN))
-    {
-        
-    }
+    
 
     //コンスタントバッファの設定とシェーダへのコンスタントバッファのセットを書く
     CONSTBUFFER_STAGE cb;
@@ -148,10 +156,38 @@ void Stage::Draw()
 
     static Transform tdonuts;
     tdonuts.scale_ = { 0.2,0.2,0.2 };
-    tdonuts.position_ = { 0,0.3,0 };
+    tdonuts.position_ = { 0.5,0.3,0 };
     tdonuts.rotate_.y += 0.1;
+
+    static Transform tdonuts2;
+    tdonuts2.scale_ = { 0.2,0.2,0.2 };
+    tdonuts2.position_ = { -0.5,0.3,0 };
+    tdonuts2.rotate_.y += 0.1;
+
+    static Transform tdonuts3;
+    tdonuts3.scale_ = { 0.2,0.2,0.2 };
+    tdonuts3.position_ = { 0.5,1.0,0 };
+    tdonuts3.rotate_.y += 0.1;
+
+    static Transform tdonuts4;
+    tdonuts4.scale_ = { 0.2,0.2,0.2 };
+    tdonuts4.position_ = { -0.5,1.0,0 };
+    tdonuts4.rotate_.y += 0.1;
+
     Model::SetTransform(hDonuts_, tdonuts);
     Model::Draw(hDonuts_);
+
+   /* Model::SetTransform(hDonuts_lambert_notex, tdonuts);
+    Model::Draw(hDonuts_lambert_notex);
+
+    Model::SetTransform(hDonuts_lambert_tex, tdonuts2);
+    Model::Draw(hDonuts_lambert_tex);
+
+    Model::SetTransform(hDonuts_phong_notex, tdonuts3);
+    Model::Draw(hDonuts_phong_notex);
+
+    Model::SetTransform(hDonuts_phong_tex, tdonuts4);
+    Model::Draw(hDonuts_phong_tex);*/
 
     ImGui::Text("Rotate:%.3f", tdonuts.rotate_.y);
 

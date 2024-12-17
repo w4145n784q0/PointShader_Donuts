@@ -79,4 +79,5 @@ public:
 
 	void ChangePoint() { S_state = S_POINT; }
 	void Change3D() { S_state = S_3D; }
+	void ChangeLight();
 };

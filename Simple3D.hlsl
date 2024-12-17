@@ -11,15 +11,16 @@ SamplerState	g_sampler : register(s0);	//サンプラー
 cbuffer gModel : register(b0)
 {
 	float4x4	matWVP;			// ワールド・ビュー・プロジェクションの合成行列
-    float4x4    matW;			//ワールド変換マトリクス
-	float4x4	matNormal;      // ワールド行列
+    float4x4	matW;			//ワールドに変換するマトリクス（スケールはかけない）ローカル座標を変換する
+	float4x4	matNormal;      // ワールド変換用の行列　法線を変換する
 	float4		diffuseColor;	//マテリアルの色＝拡散反射係数
-    float2		factor;
-    float4		ambientColor; //環境光
-    float4		specularColor; //鏡面反射
-    float4		shininess;
-	bool		isTextured;			//テクスチャーが貼られているかどうか
+    float2		factor;			//拡散光の反射係数
+    float4		ambientColor;   //環境光（使わない）
+    float4		specularColor;  //鏡面反射（使わない）
+    float4		shininess;		//（使わない）
+	bool		isTextured;		//テクスチャーが貼られているかどうか
 };
+
 
 cbuffer gStage : register(b1)
 {
@@ -32,12 +33,12 @@ cbuffer gStage : register(b1)
 //───────────────────────────────────────
 struct VS_OUT
 {
-    float4 wpos : POSITION0; //位置
-	float4 pos  : SV_POSITION;	//位置
+    //float4 wpos : POSITION0; //位置(ワールド)
+	float4 pos  : SV_POSITION;	//位置(ローカル)
 	float2 uv	: TEXCOORD;		//UV座標
 	float4 color	: COLOR;	//色（明るさ）
-    float4 normal : NORMAL;
-    float4 eyev : POSITION1;
+   // float4 normal : NORMAL;
+   // float4 eyev : POSITION1;
 };
 
 //───────────────────────────────────────
@@ -50,20 +51,22 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 
 	//ローカル座標に、ワールド・ビュー・プロジェクション行列をかけて
 	//スクリーン座標に変換し、ピクセルシェーダーへ
-    float4 wpos = mul(pos, matW); //ワールド座標に変換
-    outData.wpos = wpos;
 	outData.pos = mul(pos, matWVP);
-    outData.uv = uv.xy;
+	
+	//uvはそのまま
+    outData.uv = uv;
 
+	//法線ベクトルにワールド行列をかける
 	normal = mul(normal , matNormal);
+	
+	//光源ベクトルを正規化
     float4 light = lightPosition;
 	light = normalize(light);
 	
-    
-	
+	//光源ベクトルと法線の内積をとって-1.0~1.0でとる
 	outData.color = clamp(dot(normal, light), 0, 1);
-    outData.normal = normal;
-    outData.eyev = eyePosition - wpos;
+    //outData.normal = normal;
+	
 	//まとめて出力
 	return outData;
 }
@@ -74,19 +77,10 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 float4 PS(VS_OUT inData) : SV_Target
 {
 	float4 lightSource = float4(1.0, 1.0, 1.0, 1.0);
-	float4 ambentSource = float4(0.0, 0.0, 0.0, 1.0);
+    float4 ambentSource = float4(0.2, 0.2, 0.2, 1.0);
 	float4 diffuse;
 	float4 ambient;
 	
-    float3 dir = normalize(lightPosition.xyz - inData.wpos.xyz); //ピクセル位置のポリゴンの3次元座標＝wpos
-    //inData.normal.z = 0;
-    float color = saturate(dot(normalize(inData.normal.xyz), dir));
-    float3 k = { 0.2f, 0.2f, 1.0f };
-    float len = length(lightPosition.xyz - inData.wpos.xyz);
-    float dTerm = 1.0 / (k.x + k.y * len + k.z * len * len);
-    float4 R = reflect(normalize(inData.normal), normalize(float4(-dir, 0.0))); //正反射ベクトル
-    float4 specular = pow(saturate(dot(R, normalize(inData.eyev))), shininess) * specularColor;
-   
 	if (isTextured == false)
 	{
 		diffuse = diffuseColor * inData.color * factor.x;
@@ -96,11 +90,6 @@ float4 PS(VS_OUT inData) : SV_Target
 	{
         diffuse = g_texture.Sample(g_sampler, inData.uv) * inData.color * factor.x;
         ambient = g_texture.Sample(g_sampler, inData.uv) * ambentSource * factor.x;
-
     }
-	//return g_texture.Sample(g_sampler, inData.uv);// (diffuse + ambient);]
-	//float4 diffuse = lightSource * inData.color;
-	//float4 ambient = lightSource * ambentSource;
 	return diffuse + ambient;
 }
-//スペキュラーの部分も計算に入れる

@@ -12,7 +12,7 @@ cbuffer gModel :register(b0)
 {
     float4x4 matWVP; // ワールド・ビュー・プロジェクションの合成行列
     float4x4 matW; //ワールド変換マトリクス
-    float4x4 matNormal; // ワールド行列
+    float4x4 matNormal; // ワールド変換用の行列
     float4 diffuseColor; //マテリアルの色＝拡散反射係数
     float4 factor; //拡散光の反射係数
     float4 ambientColor;//環境光

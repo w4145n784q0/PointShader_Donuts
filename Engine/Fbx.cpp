@@ -6,6 +6,8 @@
 #include <vector>
 #include <filesystem>
 
+#include"Input.h"
+
 Fbx::Fbx()
 	:vertexCount_(0), polygonCount_(0), materialCount_(0),
 	pVertexBuffer_(nullptr), pIndexBuffer_(nullptr), pConstantBuffer_(nullptr),
@@ -292,16 +294,18 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 //コンスタントバッファ→シェーダは一方通行
 void Fbx::Draw(Transform& transform)
 {
+	ChangeLight();
+
 	//stateで点光源と平行光源を切り替えする
-	/*if (S_state == S_POINT)
+	if (S_state == S_POINT)
 	{
 		Direct3D::SetShader(SHADER_POINT);
 	}
 	else if(S_state == S_3D)
 	{
 		Direct3D::SetShader(SHADER_3D);
-	}*/
-	Direct3D::SetShader(SHADER_3D);
+	}
+	//Direct3D::SetShader(SHADER_POINT);
 	transform.Calclation();//トランスフォームを計算
 	
 
@@ -360,4 +364,19 @@ void Fbx::Draw(Transform& transform)
 
 void Fbx::Release()
 {
+}
+
+void Fbx::ChangeLight()
+{
+	if (Input::IsKeyDown(DIK_SPACE))
+	{
+		if (S_state == S_3D) 
+		{
+			S_state = S_POINT;
+		}
+		else if (S_state == S_POINT) 
+		{
+			S_state = S_3D;
+		}
+	}
 }

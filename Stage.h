@@ -18,6 +18,14 @@ class Stage : public GameObject
     int hBunny_;
     int hDonuts_;
 
+    int hDonuts_lambert_notex;
+    int hDonuts_lambert_tex;
+    int hDonuts_phong_notex;
+    int hDonuts_phong_tex;
+
+    int arr[4] = { hDonuts_lambert_notex , hDonuts_lambert_tex , hDonuts_phong_notex , hDonuts_phong_tex };
+  
+
     ID3D11Buffer* pConstantBuffer_;
     void InitConstantBuffer();
     Fbx* pFbx_;
