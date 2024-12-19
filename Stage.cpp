@@ -174,10 +174,10 @@ void Stage::Draw()
     tdonuts4.position_ = { -0.5,1.0,0 };
     tdonuts4.rotate_.y += 0.1;
 
-    Model::SetTransform(hDonuts_, tdonuts);
-    Model::Draw(hDonuts_);
+   /* Model::SetTransform(hDonuts_, tdonuts);
+    Model::Draw(hDonuts_);*/
 
-   /* Model::SetTransform(hDonuts_lambert_notex, tdonuts);
+    Model::SetTransform(hDonuts_lambert_notex, tdonuts);
     Model::Draw(hDonuts_lambert_notex);
 
     Model::SetTransform(hDonuts_lambert_tex, tdonuts2);
@@ -187,7 +187,7 @@ void Stage::Draw()
     Model::Draw(hDonuts_phong_notex);
 
     Model::SetTransform(hDonuts_phong_tex, tdonuts4);
-    Model::Draw(hDonuts_phong_tex);*/
+    Model::Draw(hDonuts_phong_tex);
 
     ImGui::Text("Rotate:%.3f", tdonuts.rotate_.y);
 

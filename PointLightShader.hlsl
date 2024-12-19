@@ -77,7 +77,8 @@ float4 PS(VS_OUT inData) : SV_Target
     float4 ambentSource = { 0.2, 0.2, 0.2, 1.0 };
     float3 dir = normalize(lightPosition.xyz - inData.wpos.xyz); //ピクセル位置のポリゴンの3次元座標＝wpos
     //inData.normal.z = 0;
-    float color = saturate(dot(normalize(inData.normal.xyz), dir));
+    float color = saturate(dot(normalize(inData.normal.xyz), dir));//反射係数
+    
     float3 k = { 0.2f, 0.2f, 1.0f };
     float len = length(lightPosition.xyz - inData.wpos.xyz);
     float dTerm = 1.0 / (k.x + k.y*len + k.z*len*len);
