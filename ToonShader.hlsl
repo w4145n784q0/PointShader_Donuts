@@ -4,6 +4,9 @@
 Texture2D g_texture : register(t0); //テクスチャー
 SamplerState g_sampler : register(s0); //サンプラー
 
+Texture2D g_toon_texture : register(t1);
+SamplerState g_toon_sampler : register(s1);
+
 //───────────────────────────────────────
 // コンスタントバッファ
 // DirectX 側から送信されてくる、ポリゴン頂点以外の諸情報の定義
@@ -140,5 +143,8 @@ float4 PS(VS_OUT inData) : SV_Target
         diffuse = g_texture.Sample(g_sampler, inData.uv) * tI * factor.x;
         ambient = g_texture.Sample(g_sampler, inData.uv) * ambentSource ;
     }
-    return diffuse + ambient;
+  //  return diffuse + ambient;
+    
+    float2 uv = float2(tI.x, 0);
+    return g_toon_texture.Sample(g_sampler, uv);
 }
