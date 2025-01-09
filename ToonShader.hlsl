@@ -41,7 +41,7 @@ struct VS_OUT
     float2 uv : TEXCOORD; //UV座標
     float4 color : COLOR; //色（明るさ）
     float4 normal : NORMAL;
-   // float4 eyev : POSITION1;
+    float4 eyev : POSITION;
 };
 
 //───────────────────────────────────────
@@ -58,16 +58,22 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	
 	//uvはそのまま
     outData.uv = uv;
+    
+    normal.w = 0;
 
 	//法線ベクトルにワールド行列をかける
     normal = mul(normal, matNormal);
+    normal = normalize(normal);
+    outData.normal = normal;
 	
 	//光源ベクトルを正規化
     float4 light = lightPosition;
     light = normalize(light);
 	
 	//光源ベクトルと法線の内積をとって0~1.0でとる
-    outData.color = clamp(dot(normal, light), 0, 1);
+    outData.color = saturate(dot(normal, light));
+    float4 posw = mul(pos, matW);
+    outData.eyev = eyePosition - posw;
 
     //float4 OutColor;
     //if (outData.color < 1.0f / 4)
@@ -103,14 +109,26 @@ float4 PS(VS_OUT inData) : SV_Target
     float4 diffuse;
     float4 ambient;
 	
+    float NE = dot(inData.normal.xyz, normalize(inData.eyev.xyz));//法線と視線のcos
+    
     float4 NL = saturate(dot(inData.normal, normalize(lightPosition)));
     float4 n1 = float4(1 / 4.0, 1 / 4.0, 1 / 4.0, 1.0);
-    float4 n2 = float4(2 / 4.0, 2 / 4.0, 2 / 4.0, 1.0);
-    float4 n3 = float4(3 / 4.0, 3 / 4.0, 3 / 4.0, 1.0);
-    float4 n4 = float4(4 / 4.0, 4 / 4.0, 4 / 4.0, 1.0);
+    //float4 n2 = float4(2 / 4.0, 2 / 4.0, 2 / 4.0, 1.0);
+    //float4 n3 = float4(3 / 4.0, 3 / 4.0, 3 / 4.0, 1.0);
+    //float4 n4 = float4(4 / 4.0, 4 / 4.0, 4 / 4.0, 1.0);
     
-    float4 tI = 0.1 * step(n1, inData.color) + 0.3 * 
-    step(n2, inData.color) + 0.3 * step(n3, inData.color) /*+ 0.6 * step(n4, NL)*/;
+    float reflection = reflect(normalize(-lightPosition), inData.normal);
+   // float4 specular = pow(saturate(dot(reflection, normalize(inData.eyey))), shininess) * specularColor;
+    
+    float2 uv;
+    uv.x = NL;
+    uv.y = 0.5; //0~1なんでもいい
+    float tI = g_toon_texture.Sample(g_sampler, uv);
+    //float stI = g_toon_texture.Sample(g_sampler, );
+    
+    
+    /*float4 tI = 0.1 * step(n1, inData.color) + 0.3 * step(n2, inData.color) + 0.3 * 
+    step(n3, inData.color) /*+ 0.6 * step(n4, NL); */
     
     //float4 OutColor;
     //if (NL.x < 1.0f / 4)
@@ -135,16 +153,25 @@ float4 PS(VS_OUT inData) : SV_Target
     
     if (isTextured == false)
     {
-        diffuse = diffuseColor * tI * factor.x;
-        ambient = diffuseColor * ambentSource ;
+        diffuse = lightSource * tI * factor.x;
+        ambient = lightSource * ambientColor;
     }
     else
     {
-        diffuse = g_texture.Sample(g_sampler, inData.uv) * tI * factor.x;
-        ambient = g_texture.Sample(g_sampler, inData.uv) * ambentSource ;
+        diffuse = lightSource * g_texture.Sample(g_sampler, inData.uv) * tI;
+        ambient = lightSource * g_texture.Sample(g_sampler, inData.uv) * ambientColor;
     }
-  //  return diffuse + ambient;
     
-    float2 uv = float2(tI.x, 0);
-    return g_toon_texture.Sample(g_sampler, uv);
+    float4 ret = diffuse + ambient;
+    if(NE > -0.2 && NE < 0.2)
+    {
+        ret = float4(0, 0, 0, 1);
+    }
+    
+    return ret;
+    
+    //float2 uv = float2(tI.x, 0);
+    //return g_toon_texture.Sample(g_sampler, uv);
+    
+    
 }
