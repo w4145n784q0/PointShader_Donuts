@@ -153,8 +153,11 @@ float4 PS(VS_OUT inData) : SV_Target
     
     if (isTextured == false)
     {
-        diffuse = lightSource * tI * factor.x;
-        ambient = lightSource * ambientColor;
+        diffuse = diffuseColor * tI ;
+        ambient = lightSource * diffuseColor * ambientColor;
+        
+        //diffuse = lightSource * tI * factor.x;
+        //ambient = lightSource * ambientColor;
     }
     else
     {
