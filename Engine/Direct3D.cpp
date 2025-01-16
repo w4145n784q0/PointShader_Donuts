@@ -44,8 +44,8 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	ZeroMemory(&scDesc, sizeof(scDesc));
 
 	//描画先のフォーマット
-	scDesc.BufferDesc.Width = winW;		//画面幅
-	scDesc.BufferDesc.Height = winH;	//画面高さ
+	scDesc.BufferDesc.Width = 0/*winW*/;		//画面幅
+	scDesc.BufferDesc.Height = 0/*winH*/;	//画面高さ
 	scDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;	// 何色使えるか
 
 	//FPS（1/60秒に1回）
@@ -438,10 +438,11 @@ void Direct3D::EndDraw()
 //解放処理
 void Direct3D::Release()
 {
-
+	//imguiの破棄
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+
 	//解放処理
 	for (int i = 0; i < SHADER_MAX; i++)
 	{

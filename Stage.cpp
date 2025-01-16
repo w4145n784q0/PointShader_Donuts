@@ -191,6 +191,14 @@ void Stage::Draw()
 
     ImGui::Text("Rotate:%.3f", tdonuts.rotate_.y);
 
+    {
+    //    //  デモウィンドウの描画
+    //    ImGui::ShowDemoWindow();
+        ImGui::Text("This is My Original Shader");
+        ImGui::Text("(%5.2lf,%5.2lf,%5.2lf)",
+            transform_.rotate_.x, transform_.rotate_.y, transform_.rotate_.z);
+    }
+
 }
 
 //開放
