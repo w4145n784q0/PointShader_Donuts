@@ -6,9 +6,9 @@
 #include "Engine/Input.h"
 #include "Engine/RootJob.h"
 #include "Engine/Model.h"
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_dx11.h"
-#include "imgui/imgui_impl_win32.h"
+#include "imgui_0/imgui.h"
+#include "imgui_0/imgui_impl_dx11.h"
+#include "imgui_0/imgui_impl_win32.h"
 
 #pragma comment(lib, "winmm.lib")
 

@@ -4,9 +4,9 @@
 #include <cassert>
 #include <vector>
 
-#include "../imgui/imgui.h"
-#include "../imgui/imgui_impl_dx11.h"
-#include "../imgui/imgui_impl_win32.h"
+#include "../imgui_0/imgui.h"
+#include "../imgui_0/imgui_impl_dx11.h"
+#include "../imgui_0/imgui_impl_win32.h"
 
 //•Ï”
 namespace Direct3D
