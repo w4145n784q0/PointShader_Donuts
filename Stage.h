@@ -25,7 +25,7 @@ class Stage : public GameObject
 
     int arr[4] = { hDonuts_lambert_notex , hDonuts_lambert_tex , hDonuts_phong_notex , hDonuts_phong_tex };
   
-
+    bool isRotate_;//メインのオブジェクトの回転可否
     ID3D11Buffer* pConstantBuffer_;
     void InitConstantBuffer();
     Fbx* pFbx_;

@@ -28,7 +28,7 @@ void Stage::InitConstantBuffer()
 
 //コンストラクタ
 Stage::Stage(GameObject* parent)
-    :GameObject(parent, "Stage"),pConstantBuffer_(nullptr),pFbx_(nullptr)
+    :GameObject(parent, "Stage"),pConstantBuffer_(nullptr),pFbx_(nullptr),isRotate_(true)
 {
     hModel_ = -1;
     hRoom_ = -1;
@@ -65,6 +65,10 @@ void Stage::Initialize()
     Camera::SetTarget(XMFLOAT3{ 0,0.8,0 });
 
     InitConstantBuffer();
+
+    static Transform tdonuts;
+    tdonuts.scale_ = { 0.2,0.2,0.2 };
+    tdonuts.position_ = { 0.5,0.3,0 };
 }
 
 //更新
@@ -155,24 +159,33 @@ void Stage::Draw()
     Model::Draw(hBunny_);*/
 
     static Transform tdonuts;
-    tdonuts.scale_ = { 0.2,0.2,0.2 };
-    tdonuts.position_ = { 0.5,0.3,0 };
-    tdonuts.rotate_.y += 0.1;
+    /*tdonuts.scale_ = { 0.2,0.2,0.2 };
+    tdonuts.position_ = { 0.5,0.3,0 };*/
+    if (isRotate_) {
+        tdonuts.rotate_.y += 1.0;
+    }
 
     static Transform tdonuts2;
     tdonuts2.scale_ = { 0.2,0.2,0.2 };
     tdonuts2.position_ = { -0.5,0.3,0 };
-    tdonuts2.rotate_.y += 0.1;
+    if (isRotate_) {
+        tdonuts2.rotate_.y += 1.0;
+    }
 
     static Transform tdonuts3;
     tdonuts3.scale_ = { 0.2,0.2,0.2 };
     tdonuts3.position_ = { 0.5,1.0,0 };
-    tdonuts3.rotate_.y += 0.1;
+    if (isRotate_) {
+        tdonuts3.rotate_.y += 1.0;
+    }
 
     static Transform tdonuts4;
     tdonuts4.scale_ = { 0.2,0.2,0.2 };
     tdonuts4.position_ = { -0.5,1.0,0 };
-    tdonuts4.rotate_.y += 0.1;
+   
+    if (isRotate_) {
+        tdonuts4.rotate_.y += 1.0;
+    }
 
    /* Model::SetTransform(hDonuts_, tdonuts);
     Model::Draw(hDonuts_);*/
@@ -189,14 +202,39 @@ void Stage::Draw()
     Model::SetTransform(hDonuts_phong_tex, tdonuts4);
     Model::Draw(hDonuts_phong_tex);
 
-    ImGui::Text("Rotate:%.3f", tdonuts.rotate_.y);
+
+    //ImGui::Text("Rotate:%.3f", tdonuts.rotate_.y);
 
     {
     //    //  デモウィンドウの描画
     //    ImGui::ShowDemoWindow();
+
+        static string text;
         ImGui::Text("This is My Original Shader");
+        ImGui::Separator();//区切り線
         ImGui::Text("(%5.2lf,%5.2lf,%5.2lf)",
             transform_.rotate_.x, transform_.rotate_.y, transform_.rotate_.z);
+
+        ImGui::Checkbox("Rotate Switch", &isRotate_);
+        if (ImGui::Button("Rotate Button"))
+        {
+            isRotate_ = !isRotate_;//今の判定をひっくり返したものを代入
+        }
+
+        ImGui::InputText("input:", text.data(), 255);
+        ImGui::Text(text.c_str());
+
+        static float pos[3] = { 0,0,0 };
+        if(ImGui::InputFloat3("Position", pos,"%.3f"))
+        {
+            tdonuts.position_ = { pos[0],pos[1],pos[2] };
+        }
+
+        static float sca = 0.2;
+        if (ImGui::SliderFloat("scale,", &sca, 0.01, 2, "%.3f"))
+        {
+            tdonuts.scale_ = { sca,sca,sca };
+        }
     }
 
 }
