@@ -20,6 +20,7 @@ class Fbx
 	struct MATERIAL
 	{
 		Texture* pTexture;
+		Texture* pNormalMap;
 		XMFLOAT4 diffuse;//拡散反射係数 ベクトル
 		XMFLOAT4 specular;//鏡面反射係数　ベクトル(色)
 		XMFLOAT4 shininess;//鏡面反射のパラメータ　スカラー
@@ -37,7 +38,8 @@ class Fbx
 		XMFLOAT4    ambientColor;//環境光の色
 		XMFLOAT4    specularColor;//
 		XMFLOAT4    shininess;
-		int			isTextured;
+		XMINT4		isTextured;
+		XMINT4      isNormalMapped;
 	};
 
 	struct VERTEX
@@ -45,6 +47,8 @@ class Fbx
 		XMVECTOR position;//位置
 		XMVECTOR uv; //テクスチャ座標
 		XMVECTOR normal; //法線ベクトル
+		XMVECTOR tangent; //接線ベクトル
+
 	};
 
 	int vertexCount_;	//頂点数

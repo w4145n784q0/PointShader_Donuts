@@ -318,7 +318,9 @@ void Fbx::Draw(Transform& transform)
 			cb.diffuseColor = pMaterialList_[i].diffuse;
 			//cb.lightPosition = Direct3D::GetLightPos();
 			cb.diffuseFactor = pMaterialList_[i].factor;
-			cb.isTextured = pMaterialList_[i].pTexture != nullptr;
+
+			int val = (int)(pMaterialList_[i].pTexture != nullptr);
+			cb.isTextured = { val,val,val,val };
 
 			D3D11_MAPPED_SUBRESOURCE pdata;
 			Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
