@@ -23,6 +23,8 @@ class Stage : public GameObject
     int hDonuts_phong_notex;
     int hDonuts_phong_tex;
 
+    int hIshigaki_;
+
     int arr[4] = { hDonuts_lambert_notex , hDonuts_lambert_tex , hDonuts_phong_notex , hDonuts_phong_tex };
   
 

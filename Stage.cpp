@@ -39,6 +39,7 @@ Stage::Stage(GameObject* parent)
     hDonuts_lambert_tex = -1;
     hDonuts_phong_notex = -1;
     hDonuts_phong_tex = -1;
+    hIshigaki_ = -1;
 }
 
 //デストラクタ
@@ -60,6 +61,8 @@ void Stage::Initialize()
     hDonuts_lambert_tex = Model::Load("Assets\\Donuts_lambert_tex.fbx");
     hDonuts_phong_notex = Model::Load("Assets\\Donuts_phong_notex.fbx");
     hDonuts_phong_tex = Model::Load("Assets\\Donuts_phong_tex.fbx");
+
+    hIshigaki_ = Model::Load("Assets\\Torus.fbx");
 
     Camera::SetPosition(XMFLOAT3{ 0, 0.8, -2.8 });
     Camera::SetTarget(XMFLOAT3{ 0,0.8,0 });
@@ -154,6 +157,7 @@ void Stage::Draw()
     Model::SetTransform(hBunny_, tbunny);
     Model::Draw(hBunny_);*/
 
+    /*ドーナツ四つTransform
     static Transform tdonuts;
     tdonuts.scale_ = { 0.2,0.2,0.2 };
     tdonuts.position_ = { 0.5,0.3,0 };
@@ -172,11 +176,12 @@ void Stage::Draw()
     static Transform tdonuts4;
     tdonuts4.scale_ = { 0.2,0.2,0.2 };
     tdonuts4.position_ = { -0.5,1.0,0 };
-    tdonuts4.rotate_.y += 0.1;
+    tdonuts4.rotate_.y += 0.1;*/
 
    /* Model::SetTransform(hDonuts_, tdonuts);
     Model::Draw(hDonuts_);*/
 
+    /*ドーナツ四つDraw
     Model::SetTransform(hDonuts_lambert_notex, tdonuts);
     Model::Draw(hDonuts_lambert_notex);
 
@@ -187,9 +192,17 @@ void Stage::Draw()
     Model::Draw(hDonuts_phong_notex);
 
     Model::SetTransform(hDonuts_phong_tex, tdonuts4);
-    Model::Draw(hDonuts_phong_tex);
+    Model::Draw(hDonuts_phong_tex);*/
 
-    ImGui::Text("Rotate:%.3f", tdonuts.rotate_.y);
+
+    static Transform ishigaki;
+    ishigaki.scale_ = { 0.5,0.5,0.5 };
+    ishigaki.position_ = { 0,0.0,0 };
+   // ishigaki.rotate_.y += 0.1;
+    Model::SetTransform(hIshigaki_, ishigaki);
+    Model::Draw(hIshigaki_);
+
+    //ImGui::Text("Rotate:%.3f", tdonuts.rotate_.y);
 
 }
 
