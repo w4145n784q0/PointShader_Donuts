@@ -61,8 +61,8 @@ HRESULT Fbx::Load(std::string fileName)
 	//カレントディレクトリを元に戻す
 	SetCurrentDirectory(defaultCurrentDir);
 
-	pToonTex_ = new Texture;
-	pToonTex_->Load("Assets//toon.png");
+	//pToonTex_ = new Texture;
+	//pToonTex_->Load("Assets//toon.png");
 
 	//マネージャ解放
 	pFbxManager->Destroy();
@@ -95,9 +95,24 @@ void Fbx::InitVertex(fbxsdk::FbxMesh* mesh)
 
 			//頂点のUV
 			FbxLayerElementUV* pUV = mesh->GetLayer(0)->GetUVs();
-			int uvIndex = mesh->GetTextureUVIndex(poly, vertex, FbxLayerElement::eTextureDiffuse);
-			FbxVector2  uv = pUV->GetDirectArray().GetAt(uvIndex);
-			vertices[index].uv = XMVectorSet((float)uv.mData[0], (float)(1.0 - uv.mData[1]), 0.0f, 0.0f);
+			if (pUV->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
+			{
+				int uvIndex = mesh->GetTextureUVIndex(poly, vertex, FbxLayerElement::eTextureDiffuse);
+				FbxVector2  uv = pUV->GetDirectArray().GetAt(uvIndex);
+				vertices[index].uv = XMVectorSet((float)uv.mData[0], (float)(1.0 - uv.mData[1]), 0.0f, 0.0f);
+			}
+			else if (pUV->GetReferenceMode() == FbxLayerElement::eIndex)
+			 {
+				FbxVector2 vUV;
+				bool res = true;
+				FbxStringList sUVSetNames;
+				mesh->GetUVSetNames(sUVSetNames);
+				FbxString sUVSetName = sUVSetNames.GetStringAt(0);
+				mesh->GetPolygonVertexUV(poly, vertex, sUVSetName, vUV, res);
+				int uvIndex = mesh->GetTextureUVIndex(poly, vertex, FbxLayerElement::eTextureDiffuse);
+				vertices[index].uv = XMVectorSet((float)vUV[0], (float)(1.0 - vUV[1]), 0.0f, 0.0f);
+			}
+
 
 
 			FbxLayerElementNormal* leNormal = mesh->GetLayer(0)->GetNormals();
@@ -424,15 +439,15 @@ void Fbx::Draw(Transform& transform)
 				Direct3D::pContext_->PSSetShaderResources(1, 1, &pSRV);
 			}
 
-			ID3D11SamplerState* pSampler = pToonTex_->GetSampler();
-			ID3D11ShaderResourceView* pSRV = pToonTex_->GetSRV();
-			Direct3D::pContext_->PSSetSamplers(1, 1, &pSampler);
-			Direct3D::pContext_->PSSetShaderResources(1, 1, &pSRV);
+			//ID3D11SamplerState* pSampler = pToonTex_->GetSampler();
+			//ID3D11ShaderResourceView* pSRV = pToonTex_->GetSRV();
+			//Direct3D::pContext_->PSSetSamplers(1, 1, &pSampler);
+			//Direct3D::pContext_->PSSetShaderResources(1, 1, &pSRV);
 
 			//描画
 			Direct3D::pContext_->DrawIndexed(indexCount_[i], 0, 0);
 		}
-		Direct3D::SetShader(SHADER_TOON);
+		//Direct3D::SetShader(SHADER_TOON);
 	}
 }
 

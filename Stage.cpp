@@ -50,7 +50,9 @@ Stage::~Stage()
 //èâä˙âª
 void Stage::Initialize()
 {
-    hModel_ = Model::Load("Assets\\Ball.fbx");
+
+    hRoom_ = Model::Load("Assets\\room.fbx");
+    /*hModel_ = Model::Load("Assets\\Ball.fbx");
     hRoom_ = Model::Load("Assets\\room.fbx");
     hGround = Model::Load("Assets\\plane3.fbx");
     hBunny_ = Model::Load("Assets\\stanford-bunny.fbx");
@@ -60,9 +62,9 @@ void Stage::Initialize()
     hDonuts_lambert_notex = Model::Load("Assets\\Donuts_lambert_notex.fbx");
     hDonuts_lambert_tex = Model::Load("Assets\\Donuts_lambert_tex.fbx");
     hDonuts_phong_notex = Model::Load("Assets\\Donuts_phong_notex.fbx");
-    hDonuts_phong_tex = Model::Load("Assets\\Donuts_phong_tex.fbx");
+    hDonuts_phong_tex = Model::Load("Assets\\Donuts_phong_tex.fbx");*/
 
-    hIshigaki_ = Model::Load("Assets\\Torus.fbx");
+    hIshigaki_ = Model::Load("Assets\\ishigaki.fbx");
 
     Camera::SetPosition(XMFLOAT3{ 0, 0.8, -2.8 });
     Camera::SetTarget(XMFLOAT3{ 0,0.8,0 });
