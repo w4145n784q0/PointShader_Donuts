@@ -51,7 +51,7 @@ Stage::~Stage()
 void Stage::Initialize()
 {
 
-    //hRoom_ = Model::Load("Assets\\room.fbx");
+    hRoom_ = Model::Load("Assets\\room.fbx");
     /*hModel_ = Model::Load("Assets\\Ball.fbx");
     hRoom_ = Model::Load("Assets\\room.fbx");
     hGround = Model::Load("Assets\\plane3.fbx");
@@ -200,9 +200,9 @@ void Stage::Draw()
     static Transform ishigaki;
     ishigaki.scale_ = { 0.5,0.5,0.5 };
     ishigaki.position_ = { 0,0.0,0 };
-   // ishigaki.rotate_.y += 0.1;
- //   Model::SetTransform(hIshigaki_, ishigaki);
- //   Model::Draw(hIshigaki_);
+    ishigaki.rotate_.y += 0.1;
+    Model::SetTransform(hIshigaki_, ishigaki);
+    Model::Draw(hIshigaki_);
 
     //ImGui::Text("Rotate:%.3f", tdonuts.rotate_.y);
 

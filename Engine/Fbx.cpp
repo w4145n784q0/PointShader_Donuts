@@ -330,38 +330,36 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 			}
 		}
 
-		//ノーマルテクスチャの読み込み関連
+		/////////   ノーマルテクスチャの読み込み関連    ////////////
 		{
-			//テクスチャ情報 bannpマッピングがないか探す
-			FbxProperty lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sBump);
+			//テクスチャ情報
+			FbxProperty  lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sBump);
 			int texCount = lProperty.GetSrcObjectCount<FbxFileTexture>();
-
-			if (texCount > 0)//ノーマルテクスチャを読む
+			if (texCount > 0)
 			{
+				//ノーマルテクスチャを読む
 				FbxFileTexture* textureInfo = lProperty.GetSrcObject<FbxFileTexture>(0);
 				const char* textureFilePath = textureInfo->GetRelativeFileName();
 
-				//ファイル名と拡張だけにする
+				//ファイル名+拡張だけにする
 				fs::path texFile(textureFilePath);
 				fs::path filename = texFile.filename();
-
-
 				//ファイルからテクスチャ作成
 				if (fs::is_regular_file(filename))
 				{
-					pMaterialList_[i].pTexture = new Texture;
+					pMaterialList_[i].pNormalMap = new Texture;
 					HRESULT hr = pMaterialList_[i].pNormalMap->Load(filename.string());
 					assert(hr == S_OK);
-
 				}
-
 			}
 			else
 			{
+				//ノーマルマップはなかったよ
 				pMaterialList_[i].pNormalMap = nullptr;
 			}
 
 		}
+		/////////   ノーマルテクスチャの読み込み関連    ////////////
 
 	}
 }
