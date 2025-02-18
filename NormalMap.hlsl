@@ -4,6 +4,7 @@
 Texture2D g_texture : register(t0); //テクスチャー
 SamplerState g_sampler : register(s0); //サンプラー
 Texture2D g_normalTexture : register(t1);//ノーマルマップテクスチャ
+SamplerState g_NormalSampler : register(s1);
 
 //───────────────────────────────────────
 // コンスタントバッファ
@@ -118,7 +119,7 @@ float4 PS(VS_OUT inData) : SV_Target
     
     if(isNormalMapped)
     {
-        float4 nMap = g_normalTexture.Sample(g_sampler, inData.uv) * 2.0f - 1.0f;
+        float4 nMap = g_normalTexture.Sample(g_NormalSampler, inData.uv) * 2.0f - 1.0f;
         nMap = normalize(nMap);
         nMap.w = 0;
         float4 NL = clamp(dot(normalize(inData.light), nMap), 0, 1);
