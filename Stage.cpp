@@ -51,7 +51,7 @@ Stage::~Stage()
 void Stage::Initialize()
 {
 
-    hRoom_ = Model::Load("Assets\\room.fbx");
+    //hRoom_ = Model::Load("Assets\\room.fbx");
     /*hModel_ = Model::Load("Assets\\Ball.fbx");
     hRoom_ = Model::Load("Assets\\room.fbx");
     hGround = Model::Load("Assets\\plane3.fbx");
@@ -64,7 +64,7 @@ void Stage::Initialize()
     hDonuts_phong_notex = Model::Load("Assets\\Donuts_phong_notex.fbx");
     hDonuts_phong_tex = Model::Load("Assets\\Donuts_phong_tex.fbx");*/
 
-    hIshigaki_ = Model::Load("Assets\\ishigaki.fbx");
+    hIshigaki_ = Model::Load("Assets\\BnpBox.fbx");
 
     Camera::SetPosition(XMFLOAT3{ 0, 0.8, -2.8 });
     Camera::SetTarget(XMFLOAT3{ 0,0.8,0 });
@@ -138,8 +138,8 @@ void Stage::Draw()
     Transform ltr;
     ltr.position_ = { Direct3D::GetLightPos().x,Direct3D::GetLightPos().y,Direct3D::GetLightPos().z };
     ltr.scale_ = { 0.1,0.1,0.1 };
-    Model::SetTransform(hModel_, ltr);
-    Model::Draw(hModel_);
+   // Model::SetTransform(hModel_, ltr);
+   // Model::Draw(hModel_);
 
 
     Transform tr;
@@ -201,8 +201,8 @@ void Stage::Draw()
     ishigaki.scale_ = { 0.5,0.5,0.5 };
     ishigaki.position_ = { 0,0.0,0 };
    // ishigaki.rotate_.y += 0.1;
-    Model::SetTransform(hIshigaki_, ishigaki);
-    Model::Draw(hIshigaki_);
+ //   Model::SetTransform(hIshigaki_, ishigaki);
+ //   Model::Draw(hIshigaki_);
 
     //ImGui::Text("Rotate:%.3f", tdonuts.rotate_.y);
 
