@@ -577,7 +577,8 @@ HRESULT Direct3D::InitShaderNomalMap()
 	D3DCompileFromFile(L"NormalMap.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
 	assert(pCompilePS != nullptr);
 
-	hr = pDevice_->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &(shaderBundle[SHADER_NORMALMAP].pPixelShader_));
+	hr = pDevice_->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(),
+		NULL, &(shaderBundle[SHADER_NORMALMAP].pPixelShader_));
 	if (FAILED(hr))
 	{
 		//ƒGƒ‰[ˆ—

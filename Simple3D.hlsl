@@ -47,48 +47,21 @@ struct VS_OUT
 VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 {
 	//ピクセルシェーダーへ渡す情報
-	VS_OUT outData;
+    VS_OUT outData;
 
 	//ローカル座標に、ワールド・ビュー・プロジェクション行列をかけて
 	//スクリーン座標に変換し、ピクセルシェーダーへ
-	outData.pos = mul(pos, matWVP);
-	
-	//uvはそのまま
+    outData.pos = mul(pos, matWVP);
     outData.uv = uv;
 
-	//法線ベクトルにワールド行列をかける
-	normal = mul(normal , matNormal);
-	
-	//光源ベクトルを正規化
+    normal = mul(normal, matNormal);
+	//float4 light = float4(0, 1, -1, 0);
     float4 light = lightPosition;
-	light = normalize(light);
-	
-	//光源ベクトルと法線の内積をとって-1.0~1.0でとる
-	outData.color = clamp(dot(normal, light), 0, 1);
-    //outData.normal = normal;
+    light = normalize(light);
+    outData.color = clamp(dot(normal, light), 0, 1);
 
-    //float4 OutColor;
-    //if (outData.color < 1.0f / 4)
-    //{
-    //    OutColor = float4(0 / 3.0f, 0 / 3.0f, 0 / 3.0f, 1.0f);
-
-    //}
-    //else if (outData.color < 2.0f / 4)
-    //{
-    //    OutColor = float4(1 / 3.0f, 1 / 3.0f, 1 / 3.0f, 1.0f);
-    //}
-    //else if (outData.color < 3.0f / 4)
-    //{
-    //    OutColor = float4(2 / 3.0f, 2 / 3.0f, 2 / 3.0f, 1.0f);
-    //}
-    //else
-    //{
-    //    OutColor = float4(3 / 3.0f, 3 / 3.0f, 3 / 3.0f, 1.0f);
-    //}
-    //outData.color = OutColor;
-	
 	//まとめて出力
-	return outData;
+    return outData;
 }
 
 //───────────────────────────────────────
@@ -96,45 +69,23 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 //───────────────────────────────────────
 float4 PS(VS_OUT inData) : SV_Target
 {
-	float4 lightSource = float4(1.0, 1.0, 1.0, 1.0);
-    float4 ambentSource = float4(0.2, 0.2, 0.2, 1.0);
-	float4 diffuse;
-	float4 ambient;
-	
-    float4 NL = saturate(dot(inData.normal, normalize(lightPosition)));
-    float4 n1 = float4(1 / 4.0, 1 / 4.0, 1 / 4.0, 1.0);
-    
-    
-    float4 OutColor;
-    if (NL.x < 1.0f / 4)
+    float4 lightSource = float4(1.0, 1.0, 1.0, 1.0);
+    float4 ambentSource = float4(0.0, 0.0, 0.0, 1.0);
+    float4 diffuse;
+    float4 ambient;
+    if (isTextured == false)
     {
-        OutColor = float4(0.0f / 3.0f, 0.0f / 3.0f, 0.0f / 3.0f, 1.0f);
-
-    }
-    else if (NL.x < 2.0f / 4)
-    {
-        OutColor = float4(1.0f / 3.0f, 1.0f / 3.0f, 1.0f / 3.0f, 1.0f);
-    }
-    else if (NL.x < 3.0f / 4)
-    {
-        OutColor = float4(2.0f / 3.0f, 2.0f / 3.0f, 2.0f / 3.0f, 1.0f);
+        diffuse = diffuseColor * inData.color * factor.x;
+        ambient = diffuseColor * ambentSource * factor.x;
     }
     else
     {
-        OutColor = float4(3.0f / 3.0f, 3.0f / 3.0f, 3.0f / 3.0f, 1.0f);
-    }
-    
-    //inData.color = OutColor;
-    
-	if (isTextured == false)
-	{
-		diffuse = diffuseColor * inData.color * factor.x;
-        ambient = diffuseColor * ambentSource * factor.x;
-    }
-	else
-	{
         diffuse = g_texture.Sample(g_sampler, inData.uv) * inData.color * factor.x;
         ambient = g_texture.Sample(g_sampler, inData.uv) * ambentSource * factor.x;
+
     }
-    return OutColor;
+	//return g_texture.Sample(g_sampler, inData.uv);// (diffuse + ambient);]
+	//float4 diffuse = lightSource * inData.color;
+	//float4 ambient = lightSource * ambentSource;
+    return diffuse + ambient;
 }

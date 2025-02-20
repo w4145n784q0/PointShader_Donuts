@@ -4,7 +4,7 @@
 Texture2D g_texture : register(t0); //テクスチャー
 SamplerState g_sampler : register(s0); //サンプラー
 Texture2D g_normalTexture : register(t1);//ノーマルマップテクスチャ
-SamplerState g_NormalSampler : register(s1);
+SamplerState g_NormalSampler : register(s1); //ノーマルマップサンプラー
 
 //───────────────────────────────────────
 // コンスタントバッファ
@@ -92,7 +92,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
     outData.Neyev.w = 0;
     
     //視線ベクトルを接空間に変換
-    float4 light = lightPosition[0];
+    float4 light = pLightposition;
     light.w = 0;
     light = normalize(light);
     
@@ -113,32 +113,38 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
 float4 PS(VS_OUT inData) : SV_Target
 {
     float4 lightSource = float4(1.0, 1.0, 1.0, 1.0);
-    float4 ambentSource = float4(0.0, 0.0, 0.0, 1.0);
+    float4 ambentSource = float4(0.7, 0.7, 0.7, 1.0);
     float4 diffuse;
     float4 ambient;
     
-    if(isNormalMapped)
-    {
+    if (isNormalMapped.x == 1)
+    { //ノーマルマップ画像の読み込み
         float4 nMap = g_normalTexture.Sample(g_NormalSampler, inData.uv) * 2.0f - 1.0f;
         nMap = normalize(nMap);
         nMap.w = 0;
+        //ランバートのやつ
         float4 NL = clamp(dot(normalize(inData.light), nMap), 0, 1);
+        //鏡面反射の計算
+        float4 reflection = reflect(normalize(inData.light), nMap);
+        float4 specular = pow(clamp(dot(reflection, inData.Neyev), 0, 1), shininess);
         
-        if (isTextured == false)
+        if (isTextured.x == 0)
         {
             diffuse = diffuseColor * NL * factor.x;
             ambient = diffuseColor * ambentSource * factor.x;
         }
         else
         {
-            diffuse = g_texture.Sample(g_sampler, inData.uv) * NL * factor.x;
-            ambient = g_texture.Sample(g_sampler, inData.uv) * ambentSource * factor.x;
+            //diffuse = g_texture.Sample(g_sampler, inData.uv) * NL * factor.x;
+            //ambient = g_texture.Sample(g_sampler, inData.uv) * ambentSource;
+            diffuse = NL + specular;
+            ambient = float4(0.3, 0.3, 0.3, 1.0);
         }
-        return diffuse + ambient;
+        return diffuse + specular + ambient;
     }
     else
     {
-        if (isTextured == false)
+        if (isTextured.x == 0)
         {
             diffuse = diffuseColor * inData.color * factor.x;
             ambient = diffuseColor * ambentSource * factor.x;
@@ -148,11 +154,9 @@ float4 PS(VS_OUT inData) : SV_Target
             diffuse = g_texture.Sample(g_sampler, inData.uv) * inData.color * factor.x;
             ambient = g_texture.Sample(g_sampler, inData.uv) * ambentSource * factor.x;
         }
-        //return g_texture.Sample(g_sampler, inData.uv);// (diffuse + ambient);]
-	    //float4 diffuse = lightSource * inData.color;
-	    //float4 ambient = lightSource * ambentSource;
+	//return g_texture.Sample(g_sampler, inData.uv);// (diffuse + ambient);]
+	//float4 diffuse = lightSource * inData.color;
+	//float4 ambient = lightSource * ambentSource;
         return diffuse + ambient;
     }
-
-
 }
