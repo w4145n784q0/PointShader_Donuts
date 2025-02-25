@@ -90,6 +90,39 @@ void Sprite::Draw(Transform& transform)
 	Direct3D::pContext_->DrawIndexed(indexNum, 0, 0);
 }
 
+void Sprite::Draw(Transform& transform, RECT rect, float alpha)
+{
+	Direct3D::SetShader(SHADER_2D);
+
+	//頂点バッファ
+	UINT stride = sizeof(VERTEX);
+	UINT offset = 0;
+	Direct3D::pContext_->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+
+	// インデックスバッファーをセット
+	stride = sizeof(int);
+	offset = 0;
+	Direct3D::pContext_->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
+
+	//コンスタントバッファ
+	Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
+	Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
+	//Direct3D::SetDepthBufferWriteEnable(false); //デプスバッファのオンオフ切り替えあとでかく
+
+	CONSTANT_BUFFER cb;
+	D3D11_MAPPED_SUBRESOURCE pdata;
+
+	//表示サイズに拡縮
+	XMMATRIX cut = XMMatrixScaling((float)rect.right, (float)rect.bottom, 1);
+	XMMATRIX view;
+	//view = XMMatrixScaling(1.0f / スクリーンサイズ幅, 1.0f / スクリーンサイズ高さ, 1);
+	//最終的な行列
+	//XMMATRIX world = cut * transform.matScale_;
+	//cut * transform.matRotate_;
+	//view * transform.matTransform_;
+
+}
+
 //解放
 void Sprite::Release()
 {

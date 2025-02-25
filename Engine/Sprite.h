@@ -18,6 +18,8 @@ class Sprite
 	struct CONSTANT_BUFFER
 	{
 		XMMATRIX	matW;		//ワールド行列
+		XMMATRIX    uvTrans;    //テクスチャ座標の変換行列
+		XMFLOAT4    bcolor;     //テクスチャとの合成色
 	};
 
 	//頂点情報
@@ -54,10 +56,12 @@ public:
 	//引数：transform	トランスフォームクラスオブジェクト
 	void Draw(Transform& transform);
 
+	void Draw(Transform& transform, RECT rect, float alpha);
+
 	//解放
 	void Release();
 
-
+	XMFLOAT2 GetTextureSize() { return pTexture_->GetTextureSize(); }
 
 private:
 	//---------Initializeから呼ばれる関数---------
