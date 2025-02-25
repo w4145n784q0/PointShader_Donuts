@@ -57,16 +57,16 @@ void Stage::Initialize()
     hImage->Initialize();
 
     hModel_ = Model::Load("Assets\\Ball.fbx");
-    hRoom_ = Model::Load("Assets\\room.fbx");
+ //   hRoom_ = Model::Load("Assets\\room.fbx");
     /*hGround = Model::Load("Assets\\plane3.fbx");
     hBunny_ = Model::Load("Assets\\stanford-bunny.fbx");
 
     hDonuts_ = Model::Load("Assets\\Donuts_phong_tex.fbx");*/
    
-    hDonuts_lambert_notex = Model::Load("Assets\\Donuts_lambert_notex.fbx");
-    hDonuts_lambert_tex = Model::Load("Assets\\Donuts_lambert_tex.fbx");
-    hDonuts_phong_notex = Model::Load("Assets\\Donuts_phong_notex.fbx");
-    hDonuts_phong_tex = Model::Load("Assets\\Donuts_phong_tex.fbx");
+ //   hDonuts_lambert_notex = Model::Load("Assets\\Donuts_lambert_notex.fbx");
+ //   hDonuts_lambert_tex = Model::Load("Assets\\Donuts_lambert_tex.fbx");
+ //   hDonuts_phong_notex = Model::Load("Assets\\Donuts_phong_notex.fbx");
+ //   hDonuts_phong_tex = Model::Load("Assets\\Donuts_phong_tex.fbx");
 
     //hIshigaki_ = Model::Load("Assets\\Torus.fbx");
     hIshigaki_ = Model::Load("Assets\\ishigaki.fbx");
@@ -155,8 +155,8 @@ void Stage::Draw()
     //Model::SetTransform(hGround, tr);
     //Model::Draw(hGround);
 
-    Model::SetTransform(hRoom_, tr);
-    Model::Draw(hRoom_);
+   //   Model::SetTransform(hRoom_, tr);
+   //   Model::Draw(hRoom_);
 
     /*static Transform tbunny;
     tbunny.scale_ = { 1,1,1 };
