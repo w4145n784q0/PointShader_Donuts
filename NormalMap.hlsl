@@ -83,7 +83,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
 	//float4 light = float4(0, 1, -1, 0);
     
     float4 posw = mul(pos, matW);
-    outData.eyev = normalize(posw - eyePosition);//ワールド座標の視線ベクトル
+    outData.eyev = float4(normalize(eyePosition.xyz - posw.xyz),0); //ワールド座標の視線ベクトル
     
     //視線ベクトルを接空間に変換
     outData.Neyev.x = dot(outData.eyev, tangent);
@@ -96,6 +96,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
     light.w = 0;
     light = normalize(light);
     
+    //ライトを接空間に変換
     outData.light.x = mul(light,tangent);
     outData.light.y = mul(light,binormal);
     outData.light.z = mul(light,normal);
@@ -135,12 +136,13 @@ float4 PS(VS_OUT inData) : SV_Target
         }
         else
         {
-            //diffuse = g_texture.Sample(g_sampler, inData.uv) * NL * factor.x;
+            diffuse = g_texture.Sample(g_sampler, inData.uv) /** NL * factor.x*/;
             //ambient = g_texture.Sample(g_sampler, inData.uv) * ambentSource;
-            diffuse = NL + specular;
+            //diffuse = NL + specular;
             ambient = float4(0.3, 0.3, 0.3, 1.0);
         }
-        return diffuse + specular + ambient;
+        return float4(1, 0, 0, 1);
+        /*return diffuse + 0.5 *specular + ambient;*/
     }
     else
     {
@@ -154,9 +156,6 @@ float4 PS(VS_OUT inData) : SV_Target
             diffuse = g_texture.Sample(g_sampler, inData.uv) * inData.color * factor.x;
             ambient = g_texture.Sample(g_sampler, inData.uv) * ambentSource * factor.x;
         }
-	//return g_texture.Sample(g_sampler, inData.uv);// (diffuse + ambient);]
-	//float4 diffuse = lightSource * inData.color;
-	//float4 ambient = lightSource * ambentSource;
         return diffuse + ambient;
     }
 }

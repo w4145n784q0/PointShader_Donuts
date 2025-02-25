@@ -1,6 +1,7 @@
 #pragma once
 #include "Engine/GameObject.h"
 #include "Engine/Fbx.h"
+#include"Engine/Sprite.h"
 
 
 struct CONSTBUFFER_STAGE
@@ -12,6 +13,7 @@ struct CONSTBUFFER_STAGE
 //ŸŸŸ‚ğŠÇ—‚·‚éƒNƒ‰ƒX
 class Stage : public GameObject
 {
+    Sprite* hImage;
     int hModel_;    //ƒ‚ƒfƒ‹”Ô†
     int hRoom_;
     int hGround;

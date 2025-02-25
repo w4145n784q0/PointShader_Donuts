@@ -266,6 +266,7 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 			//_splitpath_s(textureFilePath, nullptr, 0, nullptr, 0, name, _MAX_FNAME, ext, _MAX_EXT);
 			//wsprintf(name, "%s%s", name, ext);
 			fs::path texFile(textureFilePath);
+			fs::path filename = texFile.filename();
 			//FbxFileTexture* textureInfo = lProperty.GetSrcObject<FbxFileTexture>(0);
 			//const char* textureFilePath = textureInfo->GetRelativeFileName();
 
@@ -388,7 +389,6 @@ void Fbx::Draw(Transform& transform)
 			cb.specularColor = pMaterialList_[i].specular;
 			cb.shininess = pMaterialList_[i].shininess;
 			cb.diffuseColor = pMaterialList_[i].diffuse;
-			//cb.lightPosition = Direct3D::GetLightPos();
 			cb.diffuseFactor = pMaterialList_[i].factor;
 			int val = (int)(pMaterialList_[i].pTexture != nullptr);
 			cb.isTextured = { val,val,val,val };

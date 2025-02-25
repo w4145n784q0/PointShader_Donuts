@@ -45,7 +45,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD)
 //„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
 float4 PS(VS_OUT inData) : SV_Target
 {
-	float4 output;
+    float4 output;
     if ((int) (inData.uv.y * 600.0) % 3 == 0)
     {
         if ((int) (inData.uv.x * 800.0) % 2 == 1)
@@ -53,7 +53,7 @@ float4 PS(VS_OUT inData) : SV_Target
         else
             output = float4(0, 0, 0, 0);
     }
-	else
+    else
         output = float4(0, 0, 0, 0);
 	return output;
 }

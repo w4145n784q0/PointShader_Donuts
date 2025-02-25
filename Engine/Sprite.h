@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include <vector>
 #include "Transform.h"
+#include"string"
 
 
 
@@ -38,10 +39,11 @@ protected:
 	ID3D11Buffer* pConstantBuffer_;	//コンスタントバッファ
 
 	Texture* pTexture_;		//テクスチャ
-
+	std::string filename_;
 
 public:
 	Sprite();
+	Sprite(string filename);
 	~Sprite();
 
 	//初期化（ポリゴンを表示するための各種情報を準備）
@@ -68,7 +70,7 @@ private:
 	HRESULT CreateConstantBuffer();		//コンスタントバッファ作成
 
 	HRESULT LoadTexture();				//テクスチャをロード
-
+	HRESULT LoadTexture(string filename);//テクスチャをロード
 
 	//---------Draw関数から呼ばれる関数---------
 	void PassDataToCB(XMMATRIX worldMatrix);	//コンスタントバッファに各種情報を渡す

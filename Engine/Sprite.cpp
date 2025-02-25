@@ -2,14 +2,24 @@
 
 #include "Sprite.h"
 #include "Camera.h"
+#include<filesystem>
 
+namespace fs = std::filesystem;
 
 //コンストラクタ
 Sprite::Sprite() :
 	vertexNum_(0), pVertexBuffer_(nullptr),
 	indexNum(0), pIndexBuffer_(nullptr),
 	pConstantBuffer_(nullptr),
-	pTexture_(nullptr)
+	pTexture_(nullptr),filename_("")
+{
+}
+
+Sprite::Sprite(string filename) :
+vertexNum_(0), pVertexBuffer_(nullptr),
+indexNum(0), pIndexBuffer_(nullptr),
+pConstantBuffer_(nullptr),
+pTexture_(nullptr), filename_(filename)
 {
 }
 
@@ -42,12 +52,22 @@ HRESULT Sprite::Initialize()
 		return E_FAIL;
 	}
 
-	//テクスチャのロード
-	if (FAILED(LoadTexture()))
+	if (filename_ == "") 
 	{
-		return E_FAIL;
+		//テクスチャのロード
+		if (FAILED(LoadTexture()))
+		{
+			return E_FAIL;
+		}
 	}
-
+	else
+	{
+		//テクスチャのロード
+		if (FAILED(LoadTexture(filename_)))
+		{
+			return E_FAIL;
+		}
+	}
 	return S_OK;
 }
 
@@ -191,13 +211,33 @@ HRESULT Sprite::LoadTexture()
 	pTexture_ = new Texture;
 
 	HRESULT hr;
-	hr = pTexture_->Load("Assets\\Dice.png");
+	hr = pTexture_->Load("Assets\\BallTexture.png");
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, "テクスチャの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
 	return S_OK;
+}
+
+HRESULT Sprite::LoadTexture(string filename)
+{
+	pTexture_ = new Texture;
+
+	HRESULT hr;
+	fs::path texFile(filename);
+
+	if (fs::is_regular_file(texFile)) 
+	{
+		hr = pTexture_->Load(texFile.string());
+		if (FAILED(hr))
+		{
+			MessageBox(NULL, "テクスチャの作成に失敗しました", "エラー", MB_OK);
+			return hr;
+		}
+		return S_OK;
+	}
+	return S_FALSE;
 }
 
 //コンスタントバッファに各種情報を渡す

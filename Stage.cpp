@@ -2,6 +2,9 @@
 #include "Engine/Model.h"
 #include "Engine/Input.h"
 #include "Engine/Camera.h"
+
+
+#include"Engine/Sprite.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
@@ -50,6 +53,9 @@ Stage::~Stage()
 //初期化
 void Stage::Initialize()
 {
+    hImage =  new Sprite("Assets//tex1.png");
+    hImage->Initialize();
+
     hModel_ = Model::Load("Assets\\Ball.fbx");
     hRoom_ = Model::Load("Assets\\room.fbx");
     /*hGround = Model::Load("Assets\\plane3.fbx");
@@ -63,7 +69,7 @@ void Stage::Initialize()
     hDonuts_phong_tex = Model::Load("Assets\\Donuts_phong_tex.fbx");
 
     //hIshigaki_ = Model::Load("Assets\\Torus.fbx");
-    //hIshigaki_ = Model::Load("Assets\\ishigaki.fbx");
+    hIshigaki_ = Model::Load("Assets\\ishigaki.fbx");
     Camera::SetPosition(XMFLOAT3{ 0, 0.8, -2.8 });
     Camera::SetTarget(XMFLOAT3{ 0,0.8,0 });
 
@@ -132,6 +138,8 @@ void Stage::Update()
 //描画
 void Stage::Draw()
 {
+    Transform t;
+    //hImage->Draw(t);
 
     Transform ltr;
     ltr.position_ = { Direct3D::GetLightPos().x,Direct3D::GetLightPos().y,Direct3D::GetLightPos().z };
@@ -182,7 +190,7 @@ void Stage::Draw()
     Model::Draw(hDonuts_);*/
 
     /*ドーナツ四つDraw*/
-    Model::SetTransform(hDonuts_lambert_notex, tdonuts);
+   /* Model::SetTransform(hDonuts_lambert_notex, tdonuts);
     Model::Draw(hDonuts_lambert_notex);
 
     Model::SetTransform(hDonuts_lambert_tex, tdonuts2);
@@ -192,15 +200,15 @@ void Stage::Draw()
     Model::Draw(hDonuts_phong_notex);
 
     Model::SetTransform(hDonuts_phong_tex, tdonuts4);
-    Model::Draw(hDonuts_phong_tex);
+    Model::Draw(hDonuts_phong_tex);*/
 
 
     static Transform ishigaki;
-    ishigaki.scale_ = { 0.2,0.2,0.2 };
+    ishigaki.scale_ = { 0.4,0.4,0.4 };
     ishigaki.position_ = { 0,1.0,0 };
     ishigaki.rotate_.y += 0.1;
-    //Model::SetTransform(hIshigaki_, ishigaki);
-    //Model::Draw(hIshigaki_);
+    Model::SetTransform(hIshigaki_, ishigaki);
+    Model::Draw(hIshigaki_);
 
     //ImGui::Text("Rotate:%.3f", tdonuts.rotate_.y);
 
